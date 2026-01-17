@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import PomodoroTimer from '@/components/PomodoroTimer';
 
 const Index = () => {
@@ -8,103 +9,121 @@ const Index = () => {
     setProgress(newProgress);
   }, []);
 
-  // Aura height grows from bottom (0%) to top (100%) as timer progresses
-  const auraHeight = 20 + progress * 80; // Start at 20%, grow to 100%
+  // Aura height grows from bottom to fully cover screen as timer progresses
+  const auraHeight = 40 + progress * 60; // Start at 40%, grow to 100%
   
-  // Color transitions through the sunrise palette based on progress
-  const getAuraColors = () => {
-    if (progress < 0.15) {
-      return {
-        inner: 'hsla(280, 40%, 35%, 0.8)',
-        middle: 'hsla(250, 35%, 18%, 0.6)',
-        outer: 'hsla(234, 32%, 12%, 0)'
-      };
-    } else if (progress < 0.3) {
-      return {
-        inner: 'hsla(340, 55%, 55%, 0.8)',
-        middle: 'hsla(280, 40%, 35%, 0.5)',
-        outer: 'hsla(250, 35%, 18%, 0)'
-      };
-    } else if (progress < 0.5) {
-      return {
-        inner: 'hsla(15, 70%, 55%, 0.85)',
-        middle: 'hsla(340, 55%, 55%, 0.5)',
-        outer: 'hsla(280, 40%, 35%, 0)'
-      };
-    } else if (progress < 0.7) {
-      return {
-        inner: 'hsla(30, 85%, 55%, 0.9)',
-        middle: 'hsla(15, 70%, 55%, 0.5)',
-        outer: 'hsla(340, 55%, 55%, 0)'
-      };
-    } else if (progress < 0.85) {
-      return {
-        inner: 'hsla(42, 90%, 60%, 0.9)',
-        middle: 'hsla(30, 85%, 55%, 0.5)',
-        outer: 'hsla(15, 70%, 55%, 0)'
-      };
-    } else {
-      return {
-        inner: 'hsla(200, 70%, 75%, 0.85)',
-        middle: 'hsla(42, 90%, 60%, 0.5)',
-        outer: 'hsla(30, 85%, 55%, 0)'
-      };
-    }
+  // Layer colors that appear at different progress stages
+  const getLayerOpacity = (startProgress: number, endProgress: number) => {
+    if (progress < startProgress) return 0;
+    if (progress > endProgress) return 1;
+    return (progress - startProgress) / (endProgress - startProgress);
   };
 
-  const auraColors = getAuraColors();
+  const layers = [
+    {
+      // Deep purple/indigo base
+      inner: 'hsla(280, 40%, 35%, 0.8)',
+      middle: 'hsla(250, 35%, 18%, 0.6)',
+      outer: 'hsla(234, 32%, 12%, 0)',
+      opacity: getLayerOpacity(0, 0.15),
+      blur: 40
+    },
+    {
+      // Magenta layer
+      inner: 'hsla(340, 55%, 55%, 0.7)',
+      middle: 'hsla(340, 55%, 45%, 0.4)',
+      outer: 'hsla(280, 40%, 35%, 0)',
+      opacity: getLayerOpacity(0.12, 0.3),
+      blur: 50
+    },
+    {
+      // Orange-red layer
+      inner: 'hsla(15, 70%, 55%, 0.75)',
+      middle: 'hsla(15, 70%, 45%, 0.4)',
+      outer: 'hsla(340, 55%, 45%, 0)',
+      opacity: getLayerOpacity(0.25, 0.45),
+      blur: 45
+    },
+    {
+      // Golden orange layer
+      inner: 'hsla(30, 85%, 55%, 0.8)',
+      middle: 'hsla(30, 80%, 50%, 0.45)',
+      outer: 'hsla(15, 70%, 45%, 0)',
+      opacity: getLayerOpacity(0.4, 0.6),
+      blur: 40
+    },
+    {
+      // Bright yellow layer
+      inner: 'hsla(42, 90%, 60%, 0.85)',
+      middle: 'hsla(42, 85%, 55%, 0.5)',
+      outer: 'hsla(30, 80%, 50%, 0)',
+      opacity: getLayerOpacity(0.55, 0.75),
+      blur: 35
+    },
+    {
+      // Sky blue final layer
+      inner: 'hsla(200, 70%, 75%, 0.7)',
+      middle: 'hsla(200, 65%, 65%, 0.4)',
+      outer: 'hsla(42, 85%, 55%, 0)',
+      opacity: getLayerOpacity(0.7, 0.95),
+      blur: 30
+    }
+  ];
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-[hsl(234,32%,12%)]">
-      {/* Sunrise aura - grows from bottom */}
-      <div 
-        className="fixed inset-x-0 bottom-0 pointer-events-none transition-all duration-[2000ms] ease-out"
-        style={{
-          height: `${auraHeight}%`,
-          background: `
-            radial-gradient(
-              ellipse 120% 80% at 50% 100%,
-              ${auraColors.inner} 0%,
-              ${auraColors.middle} 40%,
-              ${auraColors.outer} 70%
-            )
-          `,
-        }}
-      />
+      {/* Layered sunrise aura - each color layer fades in additively */}
+      {layers.map((layer, index) => (
+        <motion.div
+          key={index}
+          className="fixed inset-x-0 bottom-0 pointer-events-none"
+          initial={{ height: "40%", opacity: 0 }}
+          animate={{ 
+            height: `${auraHeight}%`,
+            opacity: layer.opacity
+          }}
+          transition={{
+            height: { type: "spring", stiffness: 20, damping: 30, mass: 1 },
+            opacity: { duration: 1.5, ease: "easeInOut" }
+          }}
+          style={{
+            background: `
+              radial-gradient(
+                ellipse 120% 100% at 50% 100%,
+                ${layer.inner} 0%,
+                ${layer.middle} 50%,
+                ${layer.outer} 100%
+              )
+            `,
+            filter: `blur(${layer.blur}px)`,
+            mixBlendMode: 'screen'
+          }}
+        />
+      ))}
 
       {/* Secondary ambient glow */}
-      <div 
-        className="fixed inset-x-0 bottom-0 pointer-events-none transition-all duration-[3000ms] ease-out"
-        style={{
+      <motion.div 
+        className="fixed inset-x-0 bottom-0 pointer-events-none"
+        animate={{
           height: `${Math.min(100, auraHeight * 1.2)}%`,
+          opacity: 0.6
+        }}
+        transition={{
+          height: { type: "spring", stiffness: 15, damping: 35 },
+          opacity: { duration: 2, ease: "easeInOut" }
+        }}
+        style={{
           background: `
             radial-gradient(
               ellipse 150% 60% at 50% 100%,
-              ${auraColors.middle} 0%,
+              hsla(${progress < 0.5 ? '280, 40%, 35%' : progress < 0.85 ? '30, 85%, 55%' : '42, 90%, 60%'}, 0.3) 0%,
               transparent 60%
             )
           `,
-          opacity: 0.6,
+          mixBlendMode: 'screen'
         }}
       />
 
-      {/* Sun orb that rises */}
-      <div 
-        className="fixed pointer-events-none transition-all duration-[2000ms] ease-out"
-        style={{
-          bottom: `${-5 + progress * 50}%`,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '250px',
-          height: '250px',
-          background: `radial-gradient(circle, 
-            ${auraColors.inner.replace('0.8', '0.4').replace('0.85', '0.4').replace('0.9', '0.4')} 0%, 
-            transparent 60%
-          )`,
-          borderRadius: '50%',
-          filter: 'blur(30px)',
-        }}
-      />
 
       {/* Main content */}
       <main className="relative z-10 w-full max-w-lg mx-auto">
