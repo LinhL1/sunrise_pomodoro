@@ -1,19 +1,28 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, RotateCcw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
-const POMODORO_DURATION = 25 * 60; // 25 minutes in seconds
+const TIME_PRESETS = [
+  { label: '15m', seconds: 15 * 60 },
+  { label: '25m', seconds: 25 * 60 },
+  { label: '45m', seconds: 45 * 60 },
+  { label: '60m', seconds: 60 * 60 },
+];
 
 interface PomodoroTimerProps {
   onProgressChange: (progress: number) => void;
 }
 
 const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
-  const [timeRemaining, setTimeRemaining] = useState(POMODORO_DURATION);
+  const [duration, setDuration] = useState(25 * 60);
+  const [timeRemaining, setTimeRemaining] = useState(duration);
   const [isRunning, setIsRunning] = useState(false);
   const [sessions, setSessions] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
+  const [customMinutes, setCustomMinutes] = useState('25');
 
-  const progress = 1 - timeRemaining / POMODORO_DURATION;
+  const progress = 1 - timeRemaining / duration;
 
   useEffect(() => {
     onProgressChange(progress);
@@ -44,8 +53,39 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
 
   const resetTimer = useCallback(() => {
     setIsRunning(false);
-    setTimeRemaining(POMODORO_DURATION);
+    setTimeRemaining(duration);
+  }, [duration]);
+
+  const selectPreset = useCallback((seconds: number) => {
+    setDuration(seconds);
+    setTimeRemaining(seconds);
+    setIsRunning(false);
+    setCustomMinutes(String(seconds / 60));
   }, []);
+
+  const handleTimeClick = () => {
+    if (!isRunning) {
+      setIsEditing(true);
+    }
+  };
+
+  const handleCustomTimeSubmit = () => {
+    const mins = parseInt(customMinutes, 10);
+    if (!isNaN(mins) && mins > 0 && mins <= 180) {
+      const seconds = mins * 60;
+      setDuration(seconds);
+      setTimeRemaining(seconds);
+    }
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleCustomTimeSubmit();
+    } else if (e.key === 'Escape') {
+      setIsEditing(false);
+    }
+  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -54,17 +94,54 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-12">
+    <div className="flex flex-col items-center justify-center gap-8">
       {/* Session counter */}
       <div className="text-sm font-medium tracking-wider uppercase text-foreground/60">
         Session {sessions + 1}
       </div>
 
+      {/* Time presets */}
+      <div className="flex items-center gap-2">
+        {TIME_PRESETS.map((preset) => (
+          <Button
+            key={preset.label}
+            variant={duration === preset.seconds ? 'timerPrimary' : 'timer'}
+            size="sm"
+            onClick={() => selectPreset(preset.seconds)}
+            disabled={isRunning}
+            className="min-w-[52px]"
+          >
+            {preset.label}
+          </Button>
+        ))}
+      </div>
+
       {/* Timer display */}
       <div className="relative">
-        <div className="timer-display text-8xl md:text-9xl font-medium text-foreground text-shadow-soft">
-          {formatTime(timeRemaining)}
-        </div>
+        {isEditing ? (
+          <div className="flex items-center gap-2">
+            <Input
+              type="number"
+              value={customMinutes}
+              onChange={(e) => setCustomMinutes(e.target.value)}
+              onBlur={handleCustomTimeSubmit}
+              onKeyDown={handleKeyDown}
+              min={1}
+              max={180}
+              autoFocus
+              className="w-32 text-center text-4xl font-medium bg-transparent border-foreground/20 text-foreground"
+            />
+            <span className="text-2xl text-foreground/60">min</span>
+          </div>
+        ) : (
+          <button
+            onClick={handleTimeClick}
+            disabled={isRunning}
+            className="timer-display text-8xl md:text-9xl font-medium text-foreground text-shadow-soft cursor-pointer hover:opacity-80 transition-opacity disabled:cursor-default disabled:hover:opacity-100"
+          >
+            {formatTime(timeRemaining)}
+          </button>
+        )}
         
         {/* Progress indicator */}
         <div className="mt-6 w-full h-1 bg-foreground/10 rounded-full overflow-hidden">
@@ -100,7 +177,7 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
           ) : (
             <>
               <Play className="w-5 h-5" />
-              {timeRemaining === POMODORO_DURATION ? 'Start' : 'Resume'}
+              {timeRemaining === duration ? 'Start' : 'Resume'}
             </>
           )}
         </Button>
