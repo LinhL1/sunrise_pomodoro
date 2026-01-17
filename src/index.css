@@ -2,95 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Sunrise color progression */
+    --sunrise-night: 234 32% 12%;
+    --sunrise-predawn: 250 35% 18%;
+    --sunrise-dawn: 280 40% 35%;
+    --sunrise-pink: 340 55% 55%;
+    --sunrise-coral: 15 70% 55%;
+    --sunrise-orange: 30 85% 55%;
+    --sunrise-golden: 42 90% 60%;
+    --sunrise-morning: 200 70% 75%;
+    --sunrise-day: 200 80% 85%;
+    
+    /* Core design tokens */
+    --background: 234 32% 12%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100% / 0.08;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100% / 0.1;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 234 32% 12%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 100% / 0.15;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 100% / 0.1;
+    --muted-foreground: 0 0% 98% / 0.7;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 340 55% 55%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 100% / 0.15;
+    --input: 0 0% 100% / 0.15;
+    --ring: 0 0% 100% / 0.3;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
+
+    /* Typography */
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-display: 'Playfair Display', Georgia, serif;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 234 32% 12%;
+    --foreground: 0 0% 98%;
   }
 }
 
@@ -99,7 +73,100 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    font-family: var(--font-sans);
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .timer-display {
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .glass-panel {
+    @apply backdrop-blur-xl rounded-2xl border;
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
+  }
+
+  .sunrise-gradient {
+    transition: background 2s ease-in-out;
+  }
+
+  /* Sunrise gradient stages */
+  .sunrise-stage-0 {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--sunrise-night)) 0%,
+      hsl(var(--sunrise-predawn)) 50%,
+      hsl(var(--sunrise-dawn)) 100%
+    );
+  }
+
+  .sunrise-stage-1 {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--sunrise-predawn)) 0%,
+      hsl(var(--sunrise-dawn)) 40%,
+      hsl(var(--sunrise-pink)) 100%
+    );
+  }
+
+  .sunrise-stage-2 {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--sunrise-dawn)) 0%,
+      hsl(var(--sunrise-pink)) 50%,
+      hsl(var(--sunrise-coral)) 100%
+    );
+  }
+
+  .sunrise-stage-3 {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--sunrise-pink)) 0%,
+      hsl(var(--sunrise-coral)) 50%,
+      hsl(var(--sunrise-orange)) 100%
+    );
+  }
+
+  .sunrise-stage-4 {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--sunrise-coral)) 0%,
+      hsl(var(--sunrise-orange)) 50%,
+      hsl(var(--sunrise-golden)) 100%
+    );
+  }
+
+  .sunrise-stage-5 {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--sunrise-orange)) 0%,
+      hsl(var(--sunrise-golden)) 50%,
+      hsl(var(--sunrise-morning)) 100%
+    );
+  }
+
+  .sunrise-stage-6 {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--sunrise-golden)) 0%,
+      hsl(var(--sunrise-morning)) 60%,
+      hsl(var(--sunrise-day)) 100%
+    );
+  }
+}
+
+@layer utilities {
+  .text-shadow-soft {
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
   }
 }
