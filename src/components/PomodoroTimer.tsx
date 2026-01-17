@@ -137,7 +137,7 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
           <button
             onClick={handleTimeClick}
             disabled={isRunning}
-            className="timer-display text-8xl md:text-9xl font-medium text-foreground text-shadow-soft cursor-pointer hover:opacity-80 transition-opacity disabled:cursor-default disabled:hover:opacity-100"
+            className="bonbon-regular timer-display text-8xl md:text-9xl font-medium text-foreground text-shadow-soft cursor-pointer hover:opacity-80 transition-opacity disabled:cursor-default disabled:hover:opacity-100"
           >
             {formatTime(timeRemaining)}
           </button>

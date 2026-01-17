@@ -170,3 +170,10 @@
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
   }
 }
+
+.bonbon-regular {
+  font-family: "Bonbon", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+

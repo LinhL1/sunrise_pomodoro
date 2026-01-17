@@ -127,7 +127,7 @@ const Index = () => {
 
       {/* Main content */}
       <main className="relative z-10 w-full max-w-lg mx-auto">
-        <div className="glass-panel p-8 md:p-12">
+        <div>
           <PomodoroTimer onProgressChange={handleProgressChange} />
         </div>
       </main>
