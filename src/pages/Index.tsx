@@ -30,44 +30,28 @@ const Index = () => {
     },
     {
       // Magenta layer
-      inner: 'hsla(340, 55%, 55%, 0.7)',
-      middle: 'hsla(340, 55%, 45%, 0.4)',
-      outer: 'hsla(280, 40%, 35%, 0)',
+      inner: 'hsla(283, 55%, 55%, 0.70)',
+      middle: 'hsla(243, 55%, 45%, 0.40)',
+      outer: 'hsla(280, 40%, 35%, 0.06)',
       opacity: getLayerOpacity(0.12, 0.3),
       blur: 50
     },
     {
-      // Orange-red layer
-      inner: 'hsla(15, 70%, 55%, 0.75)',
-      middle: 'hsla(15, 70%, 45%, 0.4)',
-      outer: 'hsla(340, 55%, 45%, 0)',
-      opacity: getLayerOpacity(0.25, 0.45),
-      blur: 45
-    },
-    {
       // Golden orange layer
-      inner: 'hsla(30, 85%, 55%, 0.8)',
-      middle: 'hsla(30, 80%, 50%, 0.45)',
-      outer: 'hsla(15, 70%, 45%, 0)',
+      inner: 'hsla(292, 85%, 55%, 0.80)',
+      middle: 'hsla(206, 54%, 63%, 0.45)',
+      outer: 'hsla(214, 52%, 60%, 0.20)',
       opacity: getLayerOpacity(0.4, 0.6),
-      blur: 40
+      blur: 45
     },
     {
       // Bright yellow layer
       inner: 'hsla(42, 90%, 60%, 0.85)',
       middle: 'hsla(42, 85%, 55%, 0.5)',
-      outer: 'hsla(30, 80%, 50%, 0)',
+      outer: 'hsla(210, 65%, 54%, 0.46)',
       opacity: getLayerOpacity(0.55, 0.75),
       blur: 35
     },
-    {
-      // Sky blue final layer
-      inner: 'hsla(200, 70%, 75%, 0.7)',
-      middle: 'hsla(200, 65%, 65%, 0.4)',
-      outer: 'hsla(42, 85%, 55%, 0)',
-      opacity: getLayerOpacity(0.7, 0.95),
-      blur: 30
-    }
   ];
 
   return (
@@ -133,8 +117,8 @@ const Index = () => {
       </main>
 
       {/* Subtle hint text */}
-      <p className="mt-8 text-sm text-foreground/40 text-center max-w-xs relative z-10">
-        Watch the sunrise as you focus
+      <p className="italic mt-8 text-sm text-foreground/40 text-center max-w-xs relative z-10">
+        Enjoy the view
       </p>
     </div>
   );

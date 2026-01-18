@@ -95,10 +95,6 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-8">
-      {/* Session counter */}
-      <div className="text-sm font-medium tracking-wider uppercase text-foreground/60">
-        Session {sessions + 1}
-      </div>
 
       {/* Time presets */}
       <div className="flex items-center gap-2">
@@ -155,7 +151,7 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
       {/* Controls */}
       <div className="flex items-center gap-4">
         <Button
-          variant="timer"
+          variant="outline"
           size="iconLg"
           onClick={resetTimer}
           aria-label="Reset timer"
@@ -164,10 +160,10 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
         </Button>
         
         <Button
-          variant="timerPrimary"
+          variant="outline"
           size="xl"
           onClick={toggleTimer}
-          className="min-w-[140px]"
+          className="min-w-[140px] hover:opacity-90"
         >
           {isRunning ? (
             <>
@@ -182,24 +178,8 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
           )}
         </Button>
       </div>
-
-      {/* Completed sessions */}
-      {sessions > 0 && (
-        <div className="flex items-center gap-2 text-sm text-foreground/50">
-          <span>Completed today:</span>
-          <div className="flex gap-1">
-            {Array.from({ length: Math.min(sessions, 8) }).map((_, i) => (
-              <div
-                key={i}
-                className="w-2 h-2 rounded-full bg-foreground/40"
-              />
-            ))}
-            {sessions > 8 && <span>+{sessions - 8}</span>}
-          </div>
-        </div>
-      )}
-    </div>
-  );
+ </div> 
+ );
 };
 
 export default PomodoroTimer;
