@@ -10,7 +10,7 @@ const Index = () => {
   }, []);
 
   // Aura height grows from bottom to fully cover screen as timer progresses
-  const auraHeight = 40 + progress * 60; // Start at 40%, grow to 100%
+  const auraHeight = 60 + progress * 60; // Start at 40%, grow to 100%
   
   // Layer colors that appear at different progress stages
   const getLayerOpacity = (startProgress: number, endProgress: number) => {
@@ -55,12 +55,12 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-[hsl(234,32%,12%)]">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative bg-[hsl(234,32%,12%)]">
       {/* Layered sunrise aura - each color layer fades in additively */}
       {layers.map((layer, index) => (
         <motion.div
           key={index}
-          className="fixed inset-x-0 bottom-0 pointer-events-none"
+          className="fixed left-[-10%] right-[-10%] bottom-[-10%] pointer-events-none"
           initial={{ height: "40%", opacity: 0 }}
           animate={{ 
             height: `${auraHeight}%`,
@@ -87,7 +87,7 @@ const Index = () => {
 
       {/* Secondary ambient glow */}
       <motion.div 
-        className="fixed inset-x-0 bottom-0 pointer-events-none"
+        className="fixed left-[-10%] right-[-10%] bottom-0 pointer-events-nonee"
         animate={{
           height: `${Math.min(100, auraHeight * 1.2)}%`,
           opacity: 0.6
@@ -115,9 +115,11 @@ const Index = () => {
           <PomodoroTimer onProgressChange={handleProgressChange} />
         </div>
       </main>
-
       {/* Subtle hint text */}
-      <p className="italic mt-8 text-sm text-foreground/40 text-center max-w-xs relative z-10">
+      <p 
+        className="italic mt-8 text-sm text-center max-w-xs relative z-10 transition-colors duration-1000"
+        style={{ color: progress > 0.5 ? 'hsla(0, 0%, 100%, 0.86)' : 'hsla(0, 0%, 100%, 0.4)' }}
+      >
         Enjoy the view
       </p>
     </div>

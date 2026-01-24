@@ -4,7 +4,6 @@ import { Play, Pause, RotateCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 const TIME_PRESETS = [
-  { label: '15m', seconds: 15 * 60 },
   { label: '25m', seconds: 25 * 60 },
   { label: '45m', seconds: 45 * 60 },
   { label: '60m', seconds: 60 * 60 },
@@ -105,7 +104,7 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
             size="sm"
             onClick={() => selectPreset(preset.seconds)}
             disabled={isRunning}
-            className="min-w-[52px]"
+            className="min-w-[52px] hover:scale-100"
           >
             {preset.label}
           </Button>
