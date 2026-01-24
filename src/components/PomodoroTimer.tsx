@@ -3,57 +3,34 @@ import { Button } from '@/components/ui/button';
 import { Play, Pause, RotateCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
-// Create a gentle twinkle/ring sound using Web Audio API
+// Create a gentle chime using Web Audio API
 const createChimeSound = (audioContext: AudioContext) => {
   const now = audioContext.currentTime;
   
-  // Multiple high-pitched tones for a twinkle effect
-  const frequencies = [1318.5, 1567.98, 2093.0, 2637.0]; // E6, G6, C7, E7
+  // Create oscillators for a gentle bell-like sound
+  const oscillator1 = audioContext.createOscillator();
+  const oscillator2 = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
   
-  frequencies.forEach((freq, index) => {
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(freq, now);
-    
-    // Stagger each note slightly for a sparkle effect
-    const startTime = now + index * 0.08;
-    
-    gainNode.gain.setValueAtTime(0, startTime);
-    gainNode.gain.linearRampToValueAtTime(0.15, startTime + 0.02);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + 0.8);
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    
-    oscillator.start(startTime);
-    oscillator.stop(startTime + 0.8);
-  });
+  oscillator1.type = 'sine';
+  oscillator1.frequency.setValueAtTime(523.25, now); // C5
   
-  // Add a soft secondary ring after a short pause
-  setTimeout(() => {
-    const frequencies2 = [2093.0, 2637.0, 3135.96]; // C7, E7, G7
-    frequencies2.forEach((freq, index) => {
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
-      
-      const startTime = audioContext.currentTime + index * 0.06;
-      
-      gainNode.gain.setValueAtTime(0, startTime);
-      gainNode.gain.linearRampToValueAtTime(0.1, startTime + 0.02);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6);
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      oscillator.start(startTime);
-      oscillator.stop(startTime + 0.6);
-    });
-  }, 400);
+  oscillator2.type = 'sine';
+  oscillator2.frequency.setValueAtTime(659.25, now); // E5
+  
+  // Gentle envelope
+  gainNode.gain.setValueAtTime(0, now);
+  gainNode.gain.linearRampToValueAtTime(0.3, now + 0.05);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, now + 1.5);
+  
+  oscillator1.connect(gainNode);
+  oscillator2.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator1.start(now);
+  oscillator2.start(now);
+  oscillator1.stop(now + 1.5);
+  oscillator2.stop(now + 1.5);
 };
 
 const TIME_PRESETS = [
