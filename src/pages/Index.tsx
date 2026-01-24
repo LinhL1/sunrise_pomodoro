@@ -87,7 +87,7 @@ const Index = () => {
 
       {/* Secondary ambient glow */}
       <motion.div 
-        className="fixed left-[-10%] right-[-10%] bottom-0 pointer-events-nonee"
+        className="fixed left-[-10%] right-[-10%] bottom-0 pointer-events-none"
         animate={{
           height: `${Math.min(100, auraHeight * 1.2)}%`,
           opacity: 0.6
@@ -122,6 +122,10 @@ const Index = () => {
       >
         Enjoy the view
       </p>
+
+      <footer className="fixed bottom-0 py-4 text-center text-md text-muted-foreground bonbon-regular">
+        Love, Linh
+      </footer>
     </div>
   );
 };
