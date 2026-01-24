@@ -96,11 +96,11 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
     <div className="flex flex-col items-center justify-center gap-8">
 
       {/* Time presets */}
-      <div className="flex items-center gap-2">
+      <div className="poiret-one-regular flex items-center gap-2">
         {TIME_PRESETS.map((preset) => (
           <Button
             key={preset.label}
-            variant={duration === preset.seconds ? 'timerPrimary' : 'timer'}
+            variant={duration === preset.seconds ? 'timer' : 'timer'}
             size="sm"
             onClick={() => selectPreset(preset.seconds)}
             disabled={isRunning}
@@ -162,22 +162,23 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
           variant="outline"
           size="xl"
           onClick={toggleTimer}
-          className="min-w-[140px] hover:opacity-90"
+          className="min-w-[50px] hover:opacity-90"
         >
           {isRunning ? (
             <>
               <Pause className="w-5 h-5" />
-              Pause
             </>
           ) : (
             <>
               <Play className="w-5 h-5" />
-              {timeRemaining === duration ? 'Start' : 'Resume'}
+              {/* {timeRemaining === duration ? 'Start' : 'Resume'} */}
             </>
           )}
         </Button>
       </div>
+
  </div> 
+ 
  );
 };
 
