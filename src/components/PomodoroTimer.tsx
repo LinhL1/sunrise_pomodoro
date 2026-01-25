@@ -246,7 +246,6 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
           ) : (
             <>
               <Play className="w-5 h-5" />
-              {/* {timeRemaining === duration ? 'Start' : 'Resume'} */}
             </>
           )}
         </Button>

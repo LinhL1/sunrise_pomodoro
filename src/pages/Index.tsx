@@ -10,7 +10,7 @@ const Index = () => {
   }, []);
 
   // Aura height grows from bottom to fully cover screen as timer progresses
-  const auraHeight = 60 + progress * 60; // Start at 40%, grow to 100%
+  const auraHeight = 60 + progress * 60; 
   
   // Layer colors that appear at different progress stages
   const getLayerOpacity = (startProgress: number, endProgress: number) => {
