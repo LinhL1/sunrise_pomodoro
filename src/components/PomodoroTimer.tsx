@@ -54,6 +54,7 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
   
   const audioContextRef = useRef<AudioContext | null>(null);
   const chimeIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const lastTickRef = useRef<number>(0);
 
   const progress = 1 - timeRemaining / duration;
 
@@ -96,26 +97,46 @@ const PomodoroTimer = ({ onProgressChange }: PomodoroTimerProps) => {
     };
   }, [stopChime]);
 
+  // Timer using requestAnimationFrame for better accuracy
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let animationFrameId: number;
 
     if (isRunning && timeRemaining > 0) {
-      interval = setInterval(() => {
-        setTimeRemaining((prev) => {
-          if (prev <= 1) {
-            setIsRunning(false);
-            setIsComplete(true);
-            setSessions((s) => s + 1);
-            startChime();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+      lastTickRef.current = Date.now();
+
+      const tick = () => {
+        const now = Date.now();
+        const elapsed = now - lastTickRef.current;
+
+        // Only update when at least 1000ms has passed
+        if (elapsed >= 1000) {
+          const tickCount = Math.floor(elapsed / 1000);
+          lastTickRef.current = now - (elapsed % 1000);
+
+          setTimeRemaining((prev) => {
+            const newTime = Math.max(0, prev - tickCount);
+            if (newTime === 0) {
+              setIsRunning(false);
+              setIsComplete(true);
+              setSessions((s) => s + 1);
+              startChime();
+            }
+            return newTime;
+          });
+        }
+
+        animationFrameId = requestAnimationFrame(tick);
+      };
+
+      animationFrameId = requestAnimationFrame(tick);
     }
 
-    return () => clearInterval(interval);
-  }, [isRunning, timeRemaining, startChime]);
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [isRunning, startChime]);
 
   const toggleTimer = useCallback(() => {
     setIsRunning((prev) => !prev);

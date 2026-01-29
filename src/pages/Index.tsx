@@ -9,7 +9,6 @@ const Index = () => {
     setProgress(newProgress);
   }, []);
 
-  // Aura height grows from bottom to fully cover screen as timer progresses
   const auraHeight = 60 + progress * 60; 
   
   // Layer colors that appear at different progress stages
