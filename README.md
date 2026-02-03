@@ -1,4 +1,4 @@
 ## My Promodoro Timer
-Aesthetically pleasing and functionable pomodoro styled timer 
+Easy on the eyes and functionable pomodoro styled timer 
 
 For my monitor to replace the boring google timer 
